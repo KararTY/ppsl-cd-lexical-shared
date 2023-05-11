@@ -23,15 +23,11 @@ import {
   EntityContainerPlugin,
   INSERT_ENTITYCONTAINER_COMMAND
 } from '../plugins/EntityContainer/plugin'
-import { EntityContainerNode } from '../plugins/EntityContainer/node'
 import { EntityImageNode } from '../plugins/EntityImage/node'
-import { EntityShortDescriptionNode } from '../plugins/EntityShortDescription/node'
-import { EntityLongDescriptionNode } from '../plugins/EntityLongDescription/node'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
 
 import { RenderModal } from '@/components/modal'
 import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
-import { EntityMentionNode } from '../plugins/EntityMention/node'
 import { entityConfig } from './config'
 
 /**

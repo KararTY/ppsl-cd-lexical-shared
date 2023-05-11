@@ -43,6 +43,8 @@ export function BioEditor (props) {
         })
       })
 
+      console.log(await res.text())
+
       if (res.status >= 200 && res.status < 300) window.location.reload()
       else throw res
     } catch (error) {
