@@ -57,6 +57,7 @@ export class EntityMentionNode extends TextNode {
 
   static importJSON (serializedNode) {
     const node = $createEntityMentionNode(serializedNode)
+
     node.setTextContent(serializedNode.text)
     node.setFormat(serializedNode.format)
     node.setDetail(serializedNode.detail)
@@ -154,6 +155,7 @@ export class EntityMentionNode extends TextNode {
 
 /**
  * @param {{title: string, postId: string}}
+ * @returns {EntityMentionNode}
  */
 export function $createEntityMentionNode ({ title, postId }) {
   const mentionNode = new EntityMentionNode(postId, title)

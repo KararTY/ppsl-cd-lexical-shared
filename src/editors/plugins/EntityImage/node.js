@@ -94,8 +94,6 @@ export class EntityImageNode extends DecoratorNode {
 
   exportJSON () {
     return {
-      // Decorator node doesn't have a base exportJSON?
-      // ...super.exportJSON(),
       src: this.getSrc(),
       alt: this.getAlt(),
       type: this.getType(),

@@ -44,7 +44,6 @@ export class EntityContainerNode extends ElementNode {
 
   exportJSON () {
     return {
-      ...super.exportJSON(),
       type: this.getType(),
       version: 1
     }
