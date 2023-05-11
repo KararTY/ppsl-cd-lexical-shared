@@ -151,7 +151,7 @@ export function Toolbar ({ title = '' }) {
   return (
     <header
       ref={toolbarRef}
-      className="sticky top-0 z-50 m-0 flex flex-col gap-2 p-3 shadow-sm"
+      className="sticky top-0 z-40 m-0 flex flex-col gap-2 p-3 shadow-sm"
     >
       {title !== false && (
         <div className="flex items-center gap-1">
