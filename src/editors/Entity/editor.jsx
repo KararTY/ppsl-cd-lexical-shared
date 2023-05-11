@@ -8,10 +8,6 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { NodeEventPlugin } from '@lexical/react/LexicalNodeEventPlugin'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-
-// For debugging.
-import { TreeView } from '@lexical/react/LexicalTreeView'
 
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
 import { Toolbar } from '../toolbar/index'
@@ -25,6 +21,7 @@ import {
 } from '../plugins/EntityContainer/plugin'
 import { EntityImageNode } from '../plugins/EntityImage/node'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
+import { TreeViewPlugin } from '../plugins/TreeView/plugin'
 
 import { RenderModal } from '@/components/modal'
 import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
@@ -166,17 +163,5 @@ export function EntityEditor (props) {
 
       <TreeViewPlugin />
     </LexicalComposer>
-  )
-}
-
-export const TreeViewPlugin = () => {
-  const [editor] = useLexicalComposerContext()
-
-  return (
-    <TreeView
-      treeTypeButtonClassName="text-black dark:text-white"
-      timeTravelButtonClassName="text-black dark:text-white"
-      editor={editor}
-    />
   )
 }

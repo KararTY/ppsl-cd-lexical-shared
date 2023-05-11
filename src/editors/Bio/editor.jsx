@@ -8,6 +8,8 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 
+import { TreeViewPlugin } from '../plugins/TreeView/plugin'
+
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
 import { Toolbar } from '../toolbar/index'
 import { Placeholder } from '../components/placeholder'
@@ -97,6 +99,8 @@ export function BioEditor (props) {
           {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
+
+      <TreeViewPlugin />
     </LexicalComposer>
   )
 }
