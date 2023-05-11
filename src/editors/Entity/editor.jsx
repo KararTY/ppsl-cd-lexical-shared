@@ -32,6 +32,7 @@ import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
 import { RenderModal } from '@/components/modal'
 import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
 import { EntityMentionNode } from '../plugins/EntityMention/node'
+import { entityConfig } from './config'
 
 /**
  * @param {{readOnly, onSubmit, post, title, initialContent}} props
@@ -52,26 +53,7 @@ export function EntityEditor (props) {
    */
   const editorRef = useRef(null)
 
-  /**
-   * @type {import("@lexical/react/LexicalComposer").InitialConfigType}
-   */
-  const config = {
-    // The editor theme
-    theme: defaultTheme,
-    // Handling of errors during update
-    onError (error) {
-      throw error
-    },
-    // Any custom nodes go here
-    nodes: [
-      EntityContainerNode,
-      EntityImageNode,
-      EntityShortDescriptionNode,
-      EntityLongDescriptionNode,
-      EntityMentionNode
-    ],
-    editable: !readOnly
-  }
+  const config = entityConfig(defaultTheme, !readOnly)
 
   // **INITIAL** state.
   if (initialContent) {

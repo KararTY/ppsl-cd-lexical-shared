@@ -13,6 +13,7 @@ import { Toolbar } from '../toolbar/index'
 import { Placeholder } from '../components/placeholder'
 import { Editor } from '../components/editor'
 import { EditorFooter } from '../components/footer'
+import { bioConfig } from './config'
 
 /**
  * @param {{readOnly, post, initialContent}} props
@@ -51,21 +52,7 @@ export function BioEditor (props) {
     }
   }
 
-  /**
-   * @type {import("@lexical/react/LexicalComposer").InitialConfigType}
-   */
-  const config = {
-    // The editor theme
-    theme: defaultTheme,
-    // Handling of errors during update
-    onError (error) {
-      throw error
-    },
-    // Any custom nodes go here
-    nodes: [],
-    // **INITIAL** state.
-    editable: !readOnly
-  }
+  const config = bioConfig(defaultTheme, !readOnly)
 
   if (initialContent) {
     config.editorState = initialContent
