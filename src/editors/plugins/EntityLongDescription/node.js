@@ -40,6 +40,7 @@ export class EntityLongDescriptionNode extends ElementNode {
 
   exportJSON () {
     return {
+      children: this.getChildren(),
       type: this.getType(),
       version: 1
     }
