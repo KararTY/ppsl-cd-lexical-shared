@@ -88,8 +88,8 @@ export class EntityImageNode extends DecoratorNode {
     return { element }
   }
 
-  static importJSON () {
-    return $createEntityImageNode()
+  static importJSON (props) {
+    return $createEntityImageNode(props)
   }
 
   exportJSON () {
