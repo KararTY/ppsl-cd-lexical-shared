@@ -1,5 +1,5 @@
 import lexical from 'lexical'
-import Image from './Image.cjs'
+import Image from './Image.js'
 const { DecoratorNode } = lexical
 
 /**
@@ -104,8 +104,9 @@ export class EntityImageNode extends DecoratorNode {
   }
 
   decorate () {
-    if (typeof window !== 'undefined') {
-      return Image({ src: this.__src, alt: this.__alt })
+    console.log(Image)
+    if (typeof globalThis?.window !== 'undefined') {
+      return Image.default({ src: this.__src, alt: this.__alt })
     }
   }
 
