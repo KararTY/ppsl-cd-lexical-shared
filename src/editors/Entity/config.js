@@ -9,13 +9,11 @@ import { EntityShortDescriptionNode } from '../plugins/EntityShortDescription/no
  * @param {boolean} readOnly
  * @returns {import("@lexical/react/LexicalComposer").InitialConfigType}
  */
-export const entityConfig = (theme, editable) => ({
+export const entityConfig = (theme, editable, onError) => ({
   // The editor theme
   theme,
   // Handling of errors during update
-  onError (error) {
-    throw error
-  },
+  onError,
   // Any custom nodes go here
   nodes: [
     EntityContainerNode,

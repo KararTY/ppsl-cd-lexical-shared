@@ -53,7 +53,9 @@ export function EntityEditor (props) {
    */
   const editorRef = useRef(null)
 
-  const config = entityConfig(defaultTheme, !readOnly)
+  const config = entityConfig(defaultTheme, !readOnly, function onError (error) {
+    throw error
+  })
 
   // **INITIAL** state.
   if (initialContent) {

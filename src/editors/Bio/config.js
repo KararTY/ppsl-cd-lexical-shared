@@ -3,13 +3,11 @@
  * @param {boolean} readOnly
  * @returns {import("@lexical/react/LexicalComposer").InitialConfigType}
  */
-export const bioConfig = (theme, editable) => ({
+export const bioConfig = (theme, editable, onError) => ({
   // The editor theme
   theme,
   // Handling of errors during update
-  onError (error) {
-    throw error
-  },
+  onError,
   // Any custom nodes go here
   nodes: [],
   // **INITIAL** state.

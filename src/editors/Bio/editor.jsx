@@ -52,7 +52,9 @@ export function BioEditor (props) {
     }
   }
 
-  const config = bioConfig(defaultTheme, !readOnly)
+  const config = bioConfig(defaultTheme, !readOnly, function onError (error) {
+    throw error
+  })
 
   if (initialContent) {
     config.editorState = initialContent
