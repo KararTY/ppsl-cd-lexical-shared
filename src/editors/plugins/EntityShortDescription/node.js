@@ -1,5 +1,5 @@
-import { addClassNamesToElement } from '@lexical/utils'
-import { ElementNode } from 'lexical'
+import lexical from 'lexical'
+const { ElementNode } = lexical
 
 /**
  * @typedef {import('lexical').EditorConfig} EditorConfig
@@ -25,10 +25,7 @@ export class EntityShortDescriptionNode extends ElementNode {
     const element = document.createElement('div')
     element.dataset.type = this.getType()
 
-    addClassNamesToElement(
-      element,
-      config.theme.entityShortDescription ?? this.getType()
-    )
+    element.className = config.theme.entityShortDescription ?? this.getType()
 
     return element
   }

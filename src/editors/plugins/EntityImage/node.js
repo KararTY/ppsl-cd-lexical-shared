@@ -1,6 +1,6 @@
-import { addClassNamesToElement } from '@lexical/utils'
-import { DecoratorNode } from 'lexical'
-import Image from './Image'
+import lexical from 'lexical'
+import Image from './Image.cjs'
+const { DecoratorNode } = lexical
 
 /**
  * @typedef {import('lexical').LexicalEditor} LexicalEditor
@@ -50,7 +50,7 @@ export class EntityImageNode extends DecoratorNode {
     const element = document.createElement('div')
     element.dataset.type = this.getType()
 
-    addClassNamesToElement(element, config.theme.entityImage ?? this.getType())
+    element.className = config.theme.entityImage ?? this.getType()
 
     element.src = this.__src
     element.alt = this.__alt
@@ -83,10 +83,7 @@ export class EntityImageNode extends DecoratorNode {
 
     element.dataset.type = this.getType()
 
-    addClassNamesToElement(
-      element,
-      editor._config.theme.entityImage ?? this.getType()
-    )
+    element.className = editor._config.theme.entityImage ?? this.getType()
 
     return { element }
   }

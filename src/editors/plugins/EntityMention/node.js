@@ -9,7 +9,8 @@
  * https://github.com/facebook/lexical/blob/7150421fabb25fef65f62e18e097d0a8d4a2cde9/packages/lexical-playground/src/nodes/MentionNode.ts
  */
 
-import { $applyNodeReplacement, TextNode } from 'lexical'
+import lexical from 'lexical'
+const { $applyNodeReplacement, TextNode } = lexical
 
 /**
  * @typedef {import('lexical').LexicalEditor} LexicalEditor
