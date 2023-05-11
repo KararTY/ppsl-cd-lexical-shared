@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { $getNodeByKey, $getRoot } from 'lexical'
+import { $getNodeByKey, $getRoot, ParagraphNode } from 'lexical'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -120,6 +120,16 @@ export function EntityEditor (props) {
 
       if (textInEditor.length === 0) {
         editor.dispatchCommand(INSERT_ENTITYCONTAINER_COMMAND)
+      }
+    })
+
+    editor.registerNodeTransform(ParagraphNode, (node) => {
+      const parent = node.getParent()
+
+      if (parent instanceof ParagraphNode) {
+        const children = node.getChildren()
+        parent.append(...children)
+        node.remove()
       }
     })
   }, [editorRef])
