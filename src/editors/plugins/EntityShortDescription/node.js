@@ -40,7 +40,7 @@ export class EntityShortDescriptionNode extends ElementNode {
 
   exportJSON () {
     return {
-      children: this.getChildren(),
+      children: [],
       type: this.getType(),
       version: 1
     }
