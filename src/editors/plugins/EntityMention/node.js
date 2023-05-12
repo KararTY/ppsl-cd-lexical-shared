@@ -128,7 +128,7 @@ export class EntityMentionNode extends TextNode {
   static importDOM () {
     return {
       a: (domNode) => {
-        if (!domNode.getAttribute('data-type') === this.getType()) {
+        if (domNode.getAttribute('data-type') !== this.getType()) {
           return null
         }
 
