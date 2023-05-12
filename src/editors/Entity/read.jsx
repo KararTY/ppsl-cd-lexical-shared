@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react'
 import { createHeadlessEditor } from '@lexical/headless'
 import { $generateHtmlFromNodes } from '@lexical/html'
 
-import { bioConfig } from './config'
+import { entityConfig } from './config'
 import { defaultTheme, readOnlyTheme } from '../theme'
 
-export function BioHTML ({ initialContent }) {
+export function EntityHTML ({ initialContent }) {
   const [html, setHTML] = useState('<span>Loading...</span>')
 
   const theme = { ...defaultTheme, ...readOnlyTheme }
 
-  const config = bioConfig(theme, false, function onError (error) {
+  const config = entityConfig(theme, false, function onError (error) {
     throw error
   })
 

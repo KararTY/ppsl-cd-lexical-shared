@@ -1,6 +1,6 @@
 const entityClassesDefault = {
   entityContainer:
-    'flex flex-col sm:!grid gap-3 grid-cols-[auto_1fr] grid-rows-[repeat(3,_auto)] mb-2 last:mb-0',
+    'flex flex-col lg:!grid gap-3 grid-cols-[auto_1fr] grid-rows-[repeat(3,_auto)] mb-2 last:mb-0',
   /* 1 / 1 / 3 / 2 */
   entityImage: 'row-start-1 col-start-1 row-end-3 col-end-2',
   /* 1 / 2 / 2 / 3 */
@@ -36,8 +36,8 @@ export const readOnlyTheme = {
   article: 'relative m-0 p-0 shadow-none',
   body: 'relative',
   contentEditable: '',
-  entityImage: `${entityClassesDefault.entityImage} p-4`,
-  entityShortDescription: `${entityClassesDefault.entityShortDescription} p-4`,
-  entityLinks: `${entityClassesDefault.entityLinks} p-4`,
-  entityLongDescription: `${entityClassesDefault.entityLongDescription} p-4`
+  entityImage: `${entityClassesDefault.entityImage} h-48 w-48 object-contain bg-gray-500 bg-opacity-50 p-4`,
+  entityShortDescription: `${entityClassesDefault.entityShortDescription}`,
+  entityLinks: `${entityClassesDefault.entityLinks}`,
+  entityLongDescription: `${entityClassesDefault.entityLongDescription}`
 }
