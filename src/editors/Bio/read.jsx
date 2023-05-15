@@ -29,5 +29,5 @@ export function BioHTML ({ initialContent }) {
     })
   }, [editor])
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />
+  return html && <div dangerouslySetInnerHTML={{ __html: html }} />
 }
