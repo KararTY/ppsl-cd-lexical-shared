@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { $getRoot } from 'lexical'
 import { createHeadlessEditor } from '@lexical/headless'
 import { $generateHtmlFromNodes } from '@lexical/html'
 
@@ -20,7 +21,11 @@ export function BioHTML ({ initialContent }) {
 
   useEffect(() => {
     editor.update(() => {
-      setHTML($generateHtmlFromNodes(editor, null))
+      // https://github.com/facebook/lexical/issues/2308
+      const textInEditor = $getRoot().getTextContent().trim()
+
+      if (textInEditor.length > 0) setHTML($generateHtmlFromNodes(editor, null))
+      else setHTML('')
     })
   }, [editor])
 
