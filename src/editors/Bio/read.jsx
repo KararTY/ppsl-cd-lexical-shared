@@ -17,9 +17,14 @@ export function BioHTML ({ initialContent }) {
 
   const editor = createHeadlessEditor(config)
 
-  editor.setEditorState(editor.parseEditorState(initialContent))
-
   useEffect(() => {
+    if (!initialContent) {
+      setHTML('')
+      return
+    }
+
+    editor.setEditorState(editor.parseEditorState(initialContent))
+
     editor.update(() => {
       // https://github.com/facebook/lexical/issues/2308
       const textInEditor = $getRoot().getTextContent().trim()
