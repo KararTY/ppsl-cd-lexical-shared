@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { $getRoot } from 'lexical'
 import { createHeadlessEditor } from '@lexical/headless'
 import { $generateHtmlFromNodes } from '@lexical/html'
@@ -6,7 +6,7 @@ import { $generateHtmlFromNodes } from '@lexical/html'
 import { bioConfig } from './config'
 import { defaultTheme, readOnlyTheme } from '../theme'
 
-export function BioHTML ({ initialContent }) {
+export const BioHTML = forwardRef(({ initialContent, className = '' }, ref) => {
   const [html, setHTML] = useState('<span>Loading...</span>')
 
   const theme = { ...defaultTheme, ...readOnlyTheme }
@@ -34,5 +34,15 @@ export function BioHTML ({ initialContent }) {
     })
   }, [editor])
 
-  return html && <div dangerouslySetInnerHTML={{ __html: html }} />
-}
+  return (
+    html && (
+      <div
+        className={className}
+        ref={ref}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    )
+  )
+})
+
+BioHTML.displayName = 'BioHTML'
