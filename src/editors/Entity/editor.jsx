@@ -41,6 +41,14 @@ export function EntityEditor (props) {
 
   const [showImageModal, setShowImageModal] = useState(false)
 
+  const [isSaving, setIsSaving] = useState(false)
+
+  const onSubmitCatch = async ({ event, editor }) => {
+    setIsSaving(true)
+    await onSubmit({ event, editor })
+    setIsSaving(false)
+  }
+
   /**
    * @type {React.Ref<null | import('lexical').LexicalEditor>}
    */
@@ -113,7 +121,7 @@ export function EntityEditor (props) {
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor editorRef={editorRef} onSubmit={onSubmit}>
+      <Editor editorRef={editorRef} onSubmit={onSubmitCatch}>
         <article className={config.theme.article}>
           {!readOnly && (
             <Toolbar
@@ -157,7 +165,7 @@ export function EntityEditor (props) {
             <AutoFocusPlugin />
           </div>
 
-          {!readOnly && <EditorFooter />}
+          {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
 
