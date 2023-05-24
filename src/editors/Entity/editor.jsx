@@ -21,7 +21,6 @@ import {
 } from '../plugins/EntityContainer/plugin'
 import { EntityImageNode } from '../plugins/EntityImage/node'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
-import { TreeViewPlugin } from '../plugins/TreeView/plugin'
 
 import { RenderModal } from '@/components/modal'
 import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
@@ -168,8 +167,6 @@ export function EntityEditor (props) {
           {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
-
-      <TreeViewPlugin />
     </LexicalComposer>
   )
 }

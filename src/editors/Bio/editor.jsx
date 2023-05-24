@@ -7,8 +7,6 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 
-import { TreeViewPlugin } from '../plugins/TreeView/plugin'
-
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
 import { bioConfig } from './config'
 import { Toolbar } from '../toolbar/index'
@@ -20,7 +18,13 @@ import { EditorFooter } from '../components/footer'
  * @param {{readOnly, post, initialContent}} props
  */
 export function BioEditor (props) {
-  const { readOnly = false, title, post = {}, initialContent, onSubmit } = props
+  const {
+    readOnly = false,
+    title,
+    post = {},
+    initialContent,
+    onSubmit
+  } = props
 
   const [isSaving, setIsSaving] = useState(false)
 
@@ -75,8 +79,6 @@ export function BioEditor (props) {
           {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
-
-      <TreeViewPlugin />
     </LexicalComposer>
   )
 }
