@@ -17,7 +17,7 @@ import { $createEntityMentionNode } from './node'
 import { getPostsByTitle } from '@/lib/api/posts'
 
 const PUNCTUATION =
-  '\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%\'"~=<>_:;'
+  "\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'\"~=<>_:;"
 const NAME = '\\b[A-Z][^\\s' + PUNCTUATION + ']'
 
 const DocumentMentionsRegex = {
@@ -87,7 +87,15 @@ const mentionsCache = new Map()
 
 const dummyLookupService = {
   search (string, callback) {
-    getPostsByTitle(string).then((data) => {
+    getPostsByTitle(string, [
+      {
+        outRelations: {
+          some: {
+            toPostId: 'entity'
+          }
+        }
+      }
+    ]).then((data) => {
       const results = []
 
       for (let index = 0; index < data.result.length; index++) {
@@ -281,7 +289,12 @@ export function EntityMentionPlugin () {
     () =>
       results
         .map(
-          (result) => new MentionTypeaheadOption(result.postId, result.title, result.label)
+          (result) =>
+            new MentionTypeaheadOption(
+              result.postId,
+              result.title,
+              result.label
+            )
         )
         .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
     [results]
@@ -325,7 +338,7 @@ export function EntityMentionPlugin () {
         anchorElementRef,
         { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
       ) =>
-        anchorElementRef.current && results.length
+        anchorElementRef.current && results.length > 0
           ? ReactDOM.createPortal(
               <div className="mt-6 min-w-[250px] rounded bg-gray-500 bg-opacity-50 shadow">
                 <ul className="!list-none">
