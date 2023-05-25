@@ -32,7 +32,7 @@ import { entityConfig } from './config'
 export function EntityEditor (props) {
   const {
     readOnly = false,
-    onSubmit = () => {},
+    onSubmit,
     post = {},
     title,
     initialContent
@@ -44,7 +44,7 @@ export function EntityEditor (props) {
 
   const onSubmitCatch = async ({ event, editor }) => {
     setIsSaving(true)
-    await onSubmit({ event, editor })
+    await onSubmit?.({ event, editor })
     setIsSaving(false)
   }
 
