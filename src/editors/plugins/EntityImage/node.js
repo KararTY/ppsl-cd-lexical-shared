@@ -102,7 +102,7 @@ export class EntityImageNode extends DecoratorNode {
   }
 
   decorate () {
-    if (typeof globalThis?.window !== 'undefined') {
+    if (typeof globalThis?.window !== 'undefined' && !globalThis?.SSR) {
       return Image.default({ src: this.__src, alt: this.__alt })
     }
   }
