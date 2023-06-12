@@ -26,6 +26,20 @@ import { RenderModal } from '@/components/modal'
 import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
 import { entityConfig } from './config'
 
+export function titleFromURLString (urlStr) {
+  return urlStr.length
+    ? decodeURIComponent(
+      urlStr
+        .split('/')
+        .pop()
+        .replace(/_/g, ' ')
+        .split('.')
+        .slice(0, -1)
+        .join()
+    )
+    : ''
+}
+
 /**
  * @param {{readOnly, onSubmit, post, title, initialContent}} props
  */
@@ -74,7 +88,7 @@ export function EntityEditor (props) {
    * @param {EntityImageNode} node
    * @param {string} url
    */
-  const handleImageModalSubmit = (nodeKey, url) => {
+  const handleImageModalSubmit = ({ nodeKey }, url) => {
     const editor = editorRef.current
 
     editor.update(() => {
@@ -82,9 +96,11 @@ export function EntityEditor (props) {
        * @type {EntityImageNode}
        */
       const imageNode = $getNodeByKey(nodeKey)
+      const tempAlt = titleFromURLString(url)
 
       if (imageNode) {
         imageNode.setSrc(url)
+        imageNode.setAlt(tempAlt)
       }
     })
 
@@ -138,7 +154,15 @@ export function EntityEditor (props) {
                   nodeType={EntityImageNode}
                   eventType="click"
                   eventListener={(e, _, nodeKey) => {
-                    setShowImageModal(nodeKey)
+                    /**
+                     * @type {EntityImageNode}
+                     */
+                    const imageNode = $getNodeByKey(nodeKey)
+
+                    setShowImageModal({
+                      nodeKey,
+                      url: titleFromURLString(imageNode.getSrc())
+                    })
                   }}
                 />
                 <RenderModal>
