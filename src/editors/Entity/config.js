@@ -1,8 +1,8 @@
-import { EntityContainerNode } from '../plugins/EntityContainer/node'
-import { EntityImageNode } from '../plugins/EntityImage/node'
-import { EntityLongDescriptionNode } from '../plugins/EntityLongDescription/node'
-import { EntityMentionNode } from '../plugins/EntityMention/node'
-import { EntityShortDescriptionNode } from '../plugins/EntityShortDescription/node'
+import { EntityContainerNode } from '../plugins/EntityContainer/node.js'
+import { EntityImageNode } from '../plugins/EntityImage/node.js'
+import { EntityLongDescriptionNode } from '../plugins/EntityLongDescription/node.js'
+import { EntityMentionNode } from '../plugins/EntityMention/node.js'
+import { EntityShortDescriptionNode } from '../plugins/EntityShortDescription/node.js'
 
 /**
  * @param {any} theme

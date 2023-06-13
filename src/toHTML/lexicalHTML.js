@@ -3,9 +3,9 @@ import 'linkedom-global'
 import lexicalHeadless from '@lexical/headless'
 import lexicalHTML from '@lexical/html'
 
-import { defaultTheme, readOnlyTheme } from '../editors/theme'
-import { entityConfig } from '../editors/Entity/config'
-import { bioConfig } from '../editors/Bio/config'
+import { defaultTheme, readOnlyTheme } from '../editors/theme.js'
+import { entityConfig } from '../editors/Entity/config.js'
+import { bioConfig } from '../editors/Bio/config.js'
 
 const { createHeadlessEditor } = lexicalHeadless
 const { $generateHtmlFromNodes } = lexicalHTML
