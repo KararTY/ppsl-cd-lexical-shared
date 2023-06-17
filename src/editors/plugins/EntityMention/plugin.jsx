@@ -14,7 +14,7 @@ import {
 } from '@lexical/react/LexicalTypeaheadMenuPlugin'
 
 import { $createEntityMentionNode } from './node'
-import { getPostsByTitle } from '@/lib/api/posts'
+import { getPostsByTitle } from '#/lib/api/posts'
 
 const PUNCTUATION =
   "\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'\"~=<>_:;"

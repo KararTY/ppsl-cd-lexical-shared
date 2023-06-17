@@ -22,8 +22,8 @@ import {
 import { EntityImageNode } from '../plugins/EntityImage/node'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
 
-import { RenderModal } from '@/components/modal'
-import { ChooseImageModal } from '@/components/modal/ChooseImageModal'
+import { RenderModal } from '#/components/modal'
+import { ChooseImageModal } from '#/components/modal/ChooseImageModal'
 import { entityConfig } from './config'
 
 export function titleFromURLString (urlStr) {
