@@ -12,7 +12,7 @@ import {
 } from 'lexical'
 import { useEffect } from 'react'
 
-import cdROMImage from '@/assets/CD-ROM.png'
+import cdROMImage from '#/assets/CD-ROM.png'
 
 import { $createEntityContainerNode, EntityContainerNode } from './node'
 import { $createEntityImageNode, EntityImageNode } from '../EntityImage/node'
