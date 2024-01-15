@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { $getRoot } from 'lexical'
 import { createHeadlessEditor } from '@lexical/headless'
 import { $generateHtmlFromNodes } from '@lexical/html'
@@ -10,6 +10,13 @@ export const BioHTML = forwardRef(
   ({ initialContent, className = '', handleIsEmpty }, ref) => {
     const [html, setHTML] = useState('<span>Loading...</span>')
 
+    const callbackHandleIsEmpty = useCallback(handleIsEmpty, [handleIsEmpty])
+
+    const memoizedInitialContent = useMemo(
+      () => initialContent,
+      [initialContent]
+    )
+
     const theme = { ...defaultTheme, ...readOnlyTheme }
 
     const config = bioConfig(theme, false, function onError (error) {
@@ -19,13 +26,13 @@ export const BioHTML = forwardRef(
     const editor = createHeadlessEditor(config)
 
     useEffect(() => {
-      if (!initialContent) {
+      if (!memoizedInitialContent) {
         setHTML('')
-        handleIsEmpty?.(true)
+        callbackHandleIsEmpty?.(true)
         return
       }
 
-      editor.setEditorState(editor.parseEditorState(initialContent))
+      editor.setEditorState(editor.parseEditorState(memoizedInitialContent))
 
       editor.update(() => {
         // https://github.com/facebook/lexical/issues/2308
@@ -35,10 +42,10 @@ export const BioHTML = forwardRef(
           setHTML($generateHtmlFromNodes(editor, null))
         } else {
           setHTML('')
-          handleIsEmpty?.(true)
+          callbackHandleIsEmpty?.(true)
         }
       })
-    }, [editor])
+    }, [editor, callbackHandleIsEmpty, memoizedInitialContent])
 
     return (
       html && (
