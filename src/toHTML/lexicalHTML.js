@@ -6,17 +6,19 @@ import lexicalHTML from '@lexical/html'
 import { defaultTheme, readOnlyTheme } from '../editors/theme.js'
 import { entityConfig } from '../editors/Entity/config.js'
 import { bioConfig } from '../editors/Bio/config.js'
+import { SYSTEM_IDS } from '../editors/constants.js'
 
 const { createHeadlessEditor } = lexicalHeadless
 const { $generateHtmlFromNodes } = lexicalHTML
 
-const theme = { ...defaultTheme, ...readOnlyTheme }
-
+const { ENTITY, BIO, REVIEW } = SYSTEM_IDS
 const configs = {
-  entity: entityConfig,
-  bio: bioConfig,
-  review: bioConfig
+  [ENTITY]: entityConfig,
+  [BIO]: bioConfig,
+  [REVIEW]: bioConfig
 }
+
+const theme = { ...defaultTheme, ...readOnlyTheme }
 
 export async function toHTML (strState, type) {
   return new Promise((resolve, reject) => {

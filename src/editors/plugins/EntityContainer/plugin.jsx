@@ -7,14 +7,12 @@ import {
   ElementNode,
   ParagraphNode,
   RootNode,
-  TextNode,
-  createCommand
+  TextNode
 } from 'lexical'
 import { useEffect } from 'react'
 
 import cdROMImage from '#/assets/CD-ROM.png'
 
-import { $createEntityContainerNode, EntityContainerNode } from './node'
 import { $createEntityImageNode, EntityImageNode } from '../EntityImage/node'
 import {
   $createEntityShortDescriptionNode,
@@ -25,9 +23,8 @@ import {
   EntityLongDescriptionNode
 } from '../EntityLongDescription/node'
 
-export const INSERT_ENTITYCONTAINER_COMMAND = createCommand(
-  'insertEntityContainer'
-)
+import { $createEntityContainerNode, EntityContainerNode } from './node'
+import { INSERT_ENTITYCONTAINER_COMMAND } from './utils'
 
 /**
  * @param {import('lexical').LexicalNode} node

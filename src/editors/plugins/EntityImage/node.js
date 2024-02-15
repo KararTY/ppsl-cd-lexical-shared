@@ -1,5 +1,6 @@
 import lexical from 'lexical'
 import Image from './Image.js'
+
 const { DecoratorNode } = lexical
 
 /**
