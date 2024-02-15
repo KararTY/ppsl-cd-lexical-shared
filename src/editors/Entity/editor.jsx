@@ -49,10 +49,9 @@ export function EntityEditor (props) {
   const [isSaving, setIsSaving] = useState(false)
 
   const onSubmitCatch = async (...args) => {
-    event.preventDefault()
     setIsSaving(true)
-    // await onSubmit?.(...args)
-    // setIsSaving(false)
+    await onSubmit?.(...args)
+    setIsSaving(false)
   }
 
   const config = entityConfig(defaultTheme, !readOnly, function onError (error) {
@@ -82,7 +81,7 @@ export function EntityEditor (props) {
 
     if (content) {
       const uint8ArrayContent = stringToUint8Array(content)
-      const update = Y.encodeStateAsUpdate(uint8ArrayContent)
+      const update = Y.encodeStateAsUpdateV2(uint8ArrayContent)
       Y.applyUpdate(yDoc, update)
     }
   }, [editorRef, content, yDoc])

@@ -10,10 +10,8 @@ const noop = () => {}
 function providerFactory (yDoc, id, yjsDocMap) {
   const persistence = new IndexeddbPersistence(id, yDoc)
 
+  // This is for resetEditorModalContent.
   globalThis._persistence = persistence
-  // globalThis._doc = yDoc
-  // globalThis._Y = Y
-  // globalThis._editorRef = editorRef
 
   yjsDocMap.set(id, yDoc)
 
