@@ -1,5 +1,5 @@
 globalThis.SSR = true
 
-const { toHTML } = await import('./lexicalHTML.js')
+const { toHTML } = await import('./lexicalHTMLLinkedDom.js')
 
 export default toHTML
