@@ -1,4 +1,4 @@
-import { $getRoot } from 'lexical'
+import lexical from 'lexical'
 import lexicalHeadless from '@lexical/headless'
 import lexicalHTML from '@lexical/html'
 
@@ -7,6 +7,7 @@ import { entityConfig } from '../editors/Entity/config.js'
 import { bioConfig } from '../editors/Bio/config.js'
 import { SYSTEM_IDS } from '../editors/constants.js'
 
+const { $getRoot } = lexical
 const { createHeadlessEditor } = lexicalHeadless
 const { $generateHtmlFromNodes } = lexicalHTML
 
