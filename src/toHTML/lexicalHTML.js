@@ -1,5 +1,4 @@
-import 'linkedom-global'
-
+import { $getRoot } from 'lexical'
 import lexicalHeadless from '@lexical/headless'
 import lexicalHTML from '@lexical/html'
 
@@ -32,7 +31,13 @@ export async function toHTML (strState, type) {
     editor.setEditorState(editor.parseEditorState(strState))
 
     editor.update(() => {
-      resolve($generateHtmlFromNodes(editor, null))
+      const textInEditor = $getRoot().getTextContent().trim()
+
+      if (textInEditor.length > 0) {
+        resolve($generateHtmlFromNodes(editor, null))
+      } else {
+        resolve('')
+      }
     })
   })
 }

@@ -1,6 +1,7 @@
 import * as Y from 'yjs'
 import { useEffect, useState, useRef } from 'react'
 import { ParagraphNode } from 'lexical'
+import { base64ToUint8Array } from 'uint8array-extras'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -24,7 +25,6 @@ import { useYJSProvider } from '../plugins/YJS'
 
 import { entityConfig } from './config'
 import { getToolbarTitle } from './utils'
-import { stringToUint8Array } from '#/lib/yjs'
 
 function initialState (editor) {
   editor.dispatchCommand(INSERT_ENTITYCONTAINER_COMMAND)
@@ -80,7 +80,7 @@ export function EntityEditor (props) {
     })
 
     if (content) {
-      const uint8ArrayContent = stringToUint8Array(content)
+      const uint8ArrayContent = base64ToUint8Array(content)
       const update = Y.encodeStateAsUpdateV2(uint8ArrayContent)
       Y.applyUpdate(yDoc, update)
     }
