@@ -44,7 +44,5 @@ export function updateToJSON (config, update) {
 
   editor.update(() => {}, { discrete: true })
 
-  console.log(editor.toJSON().editorState)
-
   return editor.toJSON().editorState
 }
