@@ -52,6 +52,24 @@ function providerFactory (update, id = 'new', yjsDocMap) {
     persistence.emit('sync', args)
   })
 
+  persistence.once('synced', () => {
+    if (update) {
+      // https://github.com/yjs/yjs/blob/52b906898fee761a6223eeef6a33adc2a4041b80/README.md#example-syncing-clients-without-loading-the-ydoc
+
+      // Current
+      const currentStateUpdate = Y.encodeStateAsUpdate(doc)
+      const stateVector = Y.encodeStateVectorFromUpdate(currentStateUpdate)
+
+      // Incoming update
+      const uint8ArrayContent = base64ToUint8Array(update)
+      const convertedUpdate = Y.convertUpdateFormatV2ToV1(uint8ArrayContent)
+
+      // Diff the updates
+      const diff = Y.diffUpdate(convertedUpdate, stateVector)
+
+      Y.applyUpdate(doc, diff)
+    }
+  })
 
   provider = persistence
 
