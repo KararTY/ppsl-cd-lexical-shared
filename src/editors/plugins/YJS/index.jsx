@@ -3,22 +3,35 @@ import { base64ToUint8Array } from 'uint8array-extras'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { useCallback } from 'react'
 
-export function useYJSProvider (update) {
-  return useCallback((...args) => providerFactory(update, ...args), [update])
+export function useYJSProvider (yDocRef, update) {
+  return useCallback(
+    (...args) => providerFactory(yDocRef, update, ...args),
+    [yDocRef, update]
+  )
 }
 
 const noop = () => {}
 
+/**
+ * @type {undefined | Y.Doc}
+ */
+let yDoc
+
+/**
+ * @type {undefined | import('@lexical/yjs').Provider}
+ */
 let provider
 
 /**
+ * @param {React.Ref<null | Y.Doc} yDocRef
  * @param {Uint8Array} update
  * @param {string} id
  * @param {Map<string, Y.Doc>} yjsDocMap
  * @returns {import('@lexical/yjs').Provider}
  */
-function providerFactory (update, id = 'new', yjsDocMap) {
+function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
   if (provider) {
+    yDocRef.current = yDoc
     return provider
   }
 
@@ -70,6 +83,9 @@ function providerFactory (update, id = 'new', yjsDocMap) {
       Y.applyUpdate(doc, diff)
     }
   })
+
+  yDoc = doc
+  yDocRef.current = yDoc
 
   provider = persistence
 

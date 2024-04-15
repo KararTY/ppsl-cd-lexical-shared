@@ -38,7 +38,8 @@ export function EntityEditor (props) {
    * @type {React.Ref<null | import('lexical').LexicalEditor>}
    */
   const editorRef = useRef(null)
-  const providerFactory = useYJSProvider(update)
+  const yDocRef = useRef(null)
+  const providerFactory = useYJSProvider(yDocRef, update)
 
   const isClient = useIsClient()
 
@@ -78,7 +79,7 @@ export function EntityEditor (props) {
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor editorRef={editorRef} onSubmit={onSubmitCatch}>
+      <Editor onSubmit={onSubmitCatch} editorRef={editorRef} yDocRef={yDocRef}>
         <article className={config.theme.article}>
           <AutoFocusPlugin />
 

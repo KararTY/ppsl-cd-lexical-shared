@@ -21,10 +21,10 @@ import { getToolbarTitle } from '../Entity/utils'
 import { Toolbar } from '../toolbar'
 
 /**
- * @param {{readOnly, post, content, user}} props
+ * @param {{readOnly, post, update, user}} props
  */
 export function BioEditor (props) {
-  const { readOnly = false, title, post = {}, onSubmit, content, user } = props
+  const { readOnly = false, title, post = {}, onSubmit, update, user } = props
 
   const isClient = useIsClient()
   const [isSaving, setIsSaving] = useState(false)
@@ -44,15 +44,14 @@ export function BioEditor (props) {
   config.theme = { ...config.theme, ...editorTheme }
 
   /**
-   * @type {React.Ref<null | import('lexical').LexicalEditor>}
+   * @type {React.Ref<null | import('yjs').Doc>}
    */
-  const editorRef = useRef(null)
-
-  const providerFactory = useYJSProvider(editorRef)
+  const yDocRef = useRef(null)
+  const providerFactory = useYJSProvider(yDocRef, update)
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor editorRef={editorRef} onSubmit={onSubmitCatch}>
+      <Editor onSubmit={onSubmitCatch} yDocRef={yDocRef}>
         <article className={config.theme.article}>
           {!readOnly && (
             <Toolbar title={getToolbarTitle(title, readOnly, post)} />
@@ -77,7 +76,7 @@ export function BioEditor (props) {
                 id={post.id}
                 providerFactory={providerFactory}
                 initialEditorState={initialState}
-                shouldBootstrap
+                shouldBootstrap={!update}
                 username={user.id}
               />
             )}

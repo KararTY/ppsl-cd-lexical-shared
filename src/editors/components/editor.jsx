@@ -1,11 +1,17 @@
 import { useEffect } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 
-export function Editor ({ children, onSubmit, editorRef, yDoc, ...restProps }) {
+export function Editor ({
+  children,
+  onSubmit,
+  editorRef,
+  yDocRef,
+  ...restProps
+}) {
   const [editor] = useLexicalComposerContext()
 
   const onSubmitCatch = (event) => {
-    onSubmit({ event, editor, yDoc })
+    onSubmit({ event, editor, yDocRef })
   }
 
   useEffect(() => {
