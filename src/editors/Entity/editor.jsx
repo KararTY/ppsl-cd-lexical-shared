@@ -1,7 +1,5 @@
-import * as Y from 'yjs'
 import { useEffect, useState, useRef } from 'react'
 import { ParagraphNode } from 'lexical'
-import { base64ToUint8Array } from 'uint8array-extras'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -31,18 +29,16 @@ function initialState (editor) {
 }
 
 /**
- * @param {{readOnly, onSubmit, post, title, content, user}} props
+ * @param {{readOnly, onSubmit, post, title, update, user}} props
  */
 export function EntityEditor (props) {
-  const { readOnly = false, onSubmit, post = {}, title, content, user } = props
-
-  const [yDoc] = useState(new Y.Doc())
+  const { readOnly = false, onSubmit, post = {}, title, update, user } = props
 
   /**
    * @type {React.Ref<null | import('lexical').LexicalEditor>}
    */
   const editorRef = useRef(null)
-  const providerFactory = useYJSProvider(yDoc)
+  const providerFactory = useYJSProvider(update)
 
   const isClient = useIsClient()
 
@@ -78,17 +74,11 @@ export function EntityEditor (props) {
         node.remove()
       }
     })
-
-    if (content) {
-      const uint8ArrayContent = base64ToUint8Array(content)
-      const update = Y.encodeStateAsUpdateV2(uint8ArrayContent)
-      Y.applyUpdate(yDoc, update)
-    }
-  }, [editorRef, content, yDoc])
+  }, [editorRef])
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor editorRef={editorRef} onSubmit={onSubmitCatch} yDoc={yDoc}>
+      <Editor editorRef={editorRef} onSubmit={onSubmitCatch}>
         <article className={config.theme.article}>
           <AutoFocusPlugin />
 
@@ -113,10 +103,10 @@ export function EntityEditor (props) {
 
             {isClient && (
               <CollaborationPlugin
-                id={post.id}
+                id={post.id || 'new'}
                 providerFactory={providerFactory}
                 initialEditorState={initialState}
-                shouldBootstrap={!content}
+                shouldBootstrap={!update}
                 username={user.id}
               />
             )}
