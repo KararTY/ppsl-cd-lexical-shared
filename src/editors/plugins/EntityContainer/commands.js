@@ -1,17 +1,10 @@
-import {
-  $createParagraphNode,
-  $createTextNode,
-  $getRoot,
-  COMMAND_PRIORITY_LOW,
-  createCommand,
-  ElementNode,
-  ParagraphNode,
-  RootNode,
-  TextNode
-} from 'lexical'
-import { mergeRegister } from '@lexical/utils'
+import * as lexical from 'lexical'
+import * as lexicalUtils from '@lexical/utils'
 
-import { $createEntityImageNode, EntityImageNode } from '../EntityImage/node.js'
+import {
+  $createEntityImageNode,
+  EntityImageNode
+} from '../EntityImage/node.js'
 import {
   $createEntityShortDescriptionNode,
   EntityShortDescriptionNode
@@ -22,6 +15,20 @@ import {
 } from '../EntityLongDescription/node.js'
 import { $createEntityContainerNode, EntityContainerNode } from './node.js'
 
+const {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  COMMAND_PRIORITY_LOW,
+  createCommand,
+  ElementNode,
+  ParagraphNode,
+  RootNode,
+  TextNode
+} = lexical
+
+const { mergeRegister } = lexicalUtils
+
 export const RESET_EDITOR = createCommand('resetEditor')
 
 export const INSERT_ENTITYCONTAINER_COMMAND = createCommand(
@@ -31,7 +38,7 @@ export const INSERT_ENTITYCONTAINER_COMMAND = createCommand(
 /**
  * @param {import('lexical').LexicalEditor} editor
  */
-export const insertEntityContainerCommand = (editor) =>
+export const registerInsertEntityContainerCommand = (editor) =>
   editor.registerCommand(
     INSERT_ENTITYCONTAINER_COMMAND,
     () => {
@@ -95,7 +102,7 @@ function removeDirectDescendantTextNodes (node) {
 /**
  * @param {import('lexical').LexicalEditor} editor
  */
-export const nodeTransforms = (editor) =>
+export const registerEntityNodeTransforms = (editor) =>
   mergeRegister(
     editor.registerNodeTransform(EntityContainerNode, (node) => {
       removeDirectDescendantTextNodes(node)
