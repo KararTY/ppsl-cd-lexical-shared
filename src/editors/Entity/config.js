@@ -5,11 +5,21 @@ import { EntityMentionNode } from '../plugins/EntityMention/node.js'
 import { EntityShortDescriptionNode } from '../plugins/EntityShortDescription/node.js'
 
 /**
+ * @param {Error} error
+ * @returns {void}
+ */
+const onErrorDefault = (error) => {
+  throw error
+}
+
+/**
  * @param {any} theme
- * @param {boolean} readOnly
+ * @param {boolean} editable
+ * @param {any} editorState
+ * @param {typeof onErrorDefault} onError
  * @returns {import("@lexical/react/LexicalComposer").InitialConfigType}
  */
-export const entityConfig = (theme, editable, onError) => ({
+export const entityConfig = (theme, editable, editorState, onError = onErrorDefault) => ({
   // The editor theme
   theme,
   // Handling of errors during update
@@ -22,5 +32,6 @@ export const entityConfig = (theme, editable, onError) => ({
     EntityLongDescriptionNode,
     EntityMentionNode
   ],
-  editable
+  editable,
+  editorState
 })

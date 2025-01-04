@@ -1,31 +1,40 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin'
 
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
-import { bioConfig } from './config'
-import { Toolbar } from '../toolbar/index'
+
 import { Placeholder } from '../components/placeholder'
 import { Editor } from '../components/editor'
 import { EditorFooter } from '../components/footer'
+import useIsClient from '../components/useIsClient'
+
+import { useYJSProvider } from '../plugins/YJS/useYJSProvider'
+
+import { bioConfig } from './config'
+import { getToolbarTitle } from '../Entity/utils'
+import { Toolbar } from '../toolbar'
 
 /**
- * @param {{readOnly, post, initialContent}} props
+ * @param {{readOnly, post, update, user}} props
  */
 export function BioEditor (props) {
   const {
     readOnly = false,
     title,
     post = {},
-    initialContent,
-    onSubmit
+    onSubmit,
+    update,
+    initialUpdate,
+    user
   } = props
 
+  const isClient = useIsClient()
   const [isSaving, setIsSaving] = useState(false)
 
   const onSubmitCatch = async ({ event, editor }) => {
@@ -34,28 +43,23 @@ export function BioEditor (props) {
     setIsSaving(false)
   }
 
-  const config = bioConfig(defaultTheme, !readOnly, function onError (error) {
-    throw error
-  })
-
-  if (initialContent) {
-    config.editorState = initialContent
-  }
+  const config = bioConfig(defaultTheme, !readOnly, null)
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
-
   config.theme = { ...config.theme, ...editorTheme }
+
+  /**
+   * @type {React.Ref<null | import('yjs').Doc>}
+   */
+  const yDocRef = useRef(null)
+  const providerFactory = useYJSProvider(yDocRef, update)
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor onSubmit={onSubmitCatch}>
+      <Editor onSubmit={onSubmitCatch} yDocRef={yDocRef}>
         <article className={config.theme.article}>
           {!readOnly && (
-            <Toolbar
-              title={
-                title ?? `${!readOnly ? 'Editing ' : ''}${post.title || 'Post'}`
-              }
-            />
+            <Toolbar title={getToolbarTitle(title, readOnly, post)} />
           )}
 
           <div className={config.theme.body}>
@@ -72,7 +76,15 @@ export function BioEditor (props) {
               }
               ErrorBoundary={LexicalErrorBoundary}
             />
-            <HistoryPlugin />
+            {isClient && (
+              <CollaborationPlugin
+                id={post.id}
+                providerFactory={providerFactory}
+                initialEditorState={initialUpdate}
+                shouldBootstrap={false}
+                username={user.id}
+              />
+            )}
             <AutoFocusPlugin />
           </div>
 

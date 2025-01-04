@@ -27,9 +27,9 @@ export const editableEditorTheme = {
   body: 'relative bg-slate-900 bg-opacity-5 dark:bg-opacity-50',
   contentEditable: 'min-h-[150px] p-3 focus-visible:outline-none',
   entityImage: `${entityClassesDefault.entityImage} after:content-['Edit_image'] after:absolute after:font-bold after:inset-y-0 after:inset-x-0 after:flex after:justify-center after:items-center after:bg-black after:bg-opacity-50 after:text-white after:z-10 hover:bg-black relative hover:cursor-pointer p-4 h-48 w-48 bg-opacity-5 bg-gray-500 rounded-xl overflow-hidden`,
-  entityShortDescription: `${entityClassesDefault.entityShortDescription} relative before:content-['Short_description'] before:absolute before:text-xs before:italic before:pl-2 before:top-0 before:left-0 pt-4 p-2 bg-opacity-5 bg-gray-500`,
+  entityShortDescription: `${entityClassesDefault.entityShortDescription} relative before:content-['Short_description'] before:absolute before:text-xs before:italic before:p-2 before:top-0 before:left-0 pt-8 p-2 bg-opacity-5 bg-gray-500`,
   entityLinks: `${entityClassesDefault.entityLinks} p-2 bg-opacity-5 bg-gray-500`,
-  entityLongDescription: `${entityClassesDefault.entityLongDescription} relative before:content-['Long_description'] before:absolute before:text-xs before:italic before:pl-2 before:top-0 before:left-0 pt-4 p-2 bg-opacity-5 bg-gray-500`
+  entityLongDescription: `${entityClassesDefault.entityLongDescription} relative before:content-['Long_description'] before:absolute before:text-xs before:italic before:p-2 before:top-0 before:left-0 pt-8 p-2 bg-opacity-5 bg-gray-500`
 }
 
 export const readOnlyTheme = {

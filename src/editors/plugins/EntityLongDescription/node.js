@@ -1,5 +1,5 @@
-import lexical from 'lexical'
-const { ElementNode } = lexical
+import * as lexical from 'lexical'
+const { $applyNodeReplacement, ElementNode } = lexical
 
 /**
  * @typedef {import('lexical').EditorConfig} EditorConfig
@@ -56,7 +56,7 @@ export class EntityLongDescriptionNode extends ElementNode {
 }
 
 export function $createEntityLongDescriptionNode (props) {
-  return new EntityLongDescriptionNode(props)
+  return $applyNodeReplacement(new EntityLongDescriptionNode(props))
 }
 
 /**

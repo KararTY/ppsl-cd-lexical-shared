@@ -1,13 +1,12 @@
 import { useEffect, useState, useRef } from 'react'
-import { $getNodeByKey, $getRoot, ParagraphNode } from 'lexical'
+import { ParagraphNode } from 'lexical'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
-import { NodeEventPlugin } from '@lexical/react/LexicalNodeEventPlugin'
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin'
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
 import { Toolbar } from '../toolbar/index'
@@ -15,33 +14,16 @@ import { Placeholder } from '../components/placeholder'
 import { Editor } from '../components/editor'
 import { EditorFooter } from '../components/footer'
 
-import {
-  EntityContainerPlugin,
-  INSERT_ENTITYCONTAINER_COMMAND
-} from '../plugins/EntityContainer/plugin'
-import { EntityImageNode } from '../plugins/EntityImage/node'
+import { EntityContainerPlugin } from '../plugins/EntityContainer/plugin'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
+import { ImageModalPlugin } from '../plugins/EntityImage/ImageModalPlugin'
+import { useYJSProvider } from '../plugins/YJS/useYJSProvider'
 
-import { RenderModal } from '#/components/modal'
-import { ChooseImageModal } from '#/components/modal/ChooseImageModal'
 import { entityConfig } from './config'
-
-export function titleFromURLString (urlStr) {
-  return urlStr.length
-    ? decodeURIComponent(
-      urlStr
-        .split('/')
-        .pop()
-        .replace(/_/g, ' ')
-        .split('.')
-        .slice(0, -1)
-        .join()
-    )
-    : ''
-}
+import { getToolbarTitle } from './utils'
 
 /**
- * @param {{readOnly, onSubmit, post, title, initialContent}} props
+ * @param {{readOnly, onSubmit, post, title, update, initialUpdate, user}} props
  */
 export function EntityEditor (props) {
   const {
@@ -49,134 +31,68 @@ export function EntityEditor (props) {
     onSubmit,
     post = {},
     title,
-    initialContent
+    update,
+    initialUpdate,
+    user
   } = props
-
-  const [showImageModal, setShowImageModal] = useState(false)
-
-  const [isSaving, setIsSaving] = useState(false)
-
-  const onSubmitCatch = async ({ event, editor }) => {
-    setIsSaving(true)
-    await onSubmit?.({ event, editor })
-    setIsSaving(false)
-  }
 
   /**
    * @type {React.Ref<null | import('lexical').LexicalEditor>}
    */
   const editorRef = useRef(null)
+  const yDocRef = useRef(null)
+  const providerFactory = useYJSProvider(yDocRef, update, initialUpdate)
 
-  const config = entityConfig(defaultTheme, !readOnly, function onError (error) {
-    throw error
-  })
+  const [isSaving, setIsSaving] = useState(false)
 
-  // **INITIAL** state.
-  if (initialContent) {
-    config.editorState = initialContent
+  const onSubmitCatch = async (...args) => {
+    setIsSaving(true)
+    await onSubmit?.(...args)
+    setIsSaving(false)
   }
+
+  const config = entityConfig(defaultTheme, !readOnly, null)
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
-
   config.theme = { ...config.theme, ...editorTheme }
-
-  const handleImageModalClose = () => {
-    setShowImageModal(false)
-  }
-
-  /**
-   * @param {EntityImageNode} node
-   * @param {string} url
-   */
-  const handleImageModalSubmit = ({ nodeKey }, url) => {
-    const editor = editorRef.current
-
-    editor.update(() => {
-      /**
-       * @type {EntityImageNode}
-       */
-      const imageNode = $getNodeByKey(nodeKey)
-      const tempAlt = titleFromURLString(url)
-
-      if (imageNode) {
-        imageNode.setSrc(url)
-        imageNode.setAlt(tempAlt)
-      }
-    })
-
-    handleImageModalClose()
-  }
 
   useEffect(() => {
     const editor = editorRef.current
 
-    if (initialContent || !editor) {
+    if (!editor) {
       return
     }
-
-    editor.update(() => {
-      // https://github.com/facebook/lexical/issues/2308
-      const textInEditor = $getRoot().getTextContent().trim()
-
-      if (textInEditor.length === 0) {
-        editor.dispatchCommand(INSERT_ENTITYCONTAINER_COMMAND)
-      }
-    })
 
     editor.registerNodeTransform(ParagraphNode, (node) => {
       const parent = node.getParent()
 
       if (parent instanceof ParagraphNode) {
-        const children = node.getChildren()
-        parent.append(...children)
-        node.remove()
+        editor.update(() => {
+          const children = node.getChildren()
+          parent.append(...children)
+          node.remove()
+        })
       }
     })
   }, [editorRef])
 
   return (
     <LexicalComposer initialConfig={config}>
-      <Editor editorRef={editorRef} onSubmit={onSubmitCatch}>
+      <Editor onSubmit={onSubmitCatch} editorRef={editorRef} yDocRef={yDocRef}>
         <article className={config.theme.article}>
+          <AutoFocusPlugin />
+
           {!readOnly && (
-            <Toolbar
-              title={
-                title ?? `${!readOnly ? 'Editing ' : ''}${post.title || 'Post'}`
-              }
-            />
+            <Toolbar title={getToolbarTitle(title, readOnly, post)} />
           )}
 
           <div className={config.theme.body}>
             <EntityContainerPlugin />
-            {!readOnly && (
-              <>
-                <NodeEventPlugin
-                  nodeType={EntityImageNode}
-                  eventType="click"
-                  eventListener={(e, _, nodeKey) => {
-                    /**
-                     * @type {EntityImageNode}
-                     */
-                    const imageNode = $getNodeByKey(nodeKey)
 
-                    setShowImageModal({
-                      nodeKey,
-                      url: titleFromURLString(imageNode.getSrc())
-                    })
-                  }}
-                />
-                <RenderModal>
-                  {showImageModal && (
-                    <ChooseImageModal
-                      data={showImageModal}
-                      onClose={handleImageModalClose}
-                      onSubmit={handleImageModalSubmit}
-                    />
-                  )}
-                </RenderModal>
-              </>
-            )}
-            {globalThis.document && <EntityMentionPlugin />}
+            {!readOnly && <ImageModalPlugin />}
+
+            <EntityMentionPlugin />
+
             <RichTextPlugin
               placeholder={!readOnly && <Placeholder />}
               contentEditable={
@@ -184,13 +100,18 @@ export function EntityEditor (props) {
               }
               ErrorBoundary={LexicalErrorBoundary}
             />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
           </div>
 
           {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
+
+      <CollaborationPlugin
+        id={post.id}
+        providerFactory={providerFactory}
+        shouldBootstrap={false}
+        username={user.id}
+      />
     </LexicalComposer>
   )
 }
