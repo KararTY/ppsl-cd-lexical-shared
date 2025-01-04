@@ -1,19 +1,19 @@
-import { useEffect } from "react";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
+import { useEffect } from 'react'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { mergeRegister } from '@lexical/utils'
 
-import { EntityImageNode } from "../EntityImage/node";
-import { EntityShortDescriptionNode } from "../EntityShortDescription/node";
-import { EntityLongDescriptionNode } from "../EntityLongDescription/node";
+import { EntityImageNode } from '../EntityImage/node'
+import { EntityShortDescriptionNode } from '../EntityShortDescription/node'
+import { EntityLongDescriptionNode } from '../EntityLongDescription/node'
 
-import { EntityContainerNode } from "./node";
+import { EntityContainerNode } from './node'
 import {
   registerInsertEntityContainerCommand,
-  registerEntityNodeTransforms,
-} from "./commands";
+  registerEntityNodeTransforms
+} from './commands'
 
-export function EntityContainerPlugin() {
-  const [editor] = useLexicalComposerContext();
+export function EntityContainerPlugin () {
+  const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
     if (
@@ -21,19 +21,19 @@ export function EntityContainerPlugin() {
         EntityContainerNode,
         EntityImageNode,
         EntityShortDescriptionNode,
-        EntityLongDescriptionNode,
+        EntityLongDescriptionNode
       ])
     ) {
       throw new Error(
-        "EntityContainerPlugin: EntityContainerNode, EntityImageNode, EntityShortDescriptionNode or EntityLongDescriptionNode not registered on editor."
-      );
+        'EntityContainerPlugin: EntityContainerNode, EntityImageNode, EntityShortDescriptionNode or EntityLongDescriptionNode not registered on editor.'
+      )
     }
 
     return mergeRegister(
       registerInsertEntityContainerCommand(editor),
       registerEntityNodeTransforms(editor)
-    );
-  }, [editor]);
+    )
+  }, [editor])
 
-  return null;
+  return null
 }
