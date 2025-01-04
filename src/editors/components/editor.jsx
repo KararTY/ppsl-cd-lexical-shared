@@ -11,7 +11,7 @@ export function Editor ({
   const [editor] = useLexicalComposerContext()
 
   const onSubmitCatch = (event) => {
-    onSubmit({ event, editor, yDocRef })
+    onSubmit({ event, editor, yDoc: yDocRef.current })
   }
 
   useEffect(() => {
