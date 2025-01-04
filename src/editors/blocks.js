@@ -1,4 +1,6 @@
-import { $isAtNodeEnd } from '@lexical/selection'
+import * as lexicalSelection from '@lexical/selection'
+
+const { $isAtNodeEnd } = lexicalSelection
 
 export const blockTypeToBlockName = {
   paragraph: 'Normal',

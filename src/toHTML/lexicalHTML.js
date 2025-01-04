@@ -1,6 +1,6 @@
-import lexical from 'lexical'
-import lexicalHeadless from '@lexical/headless'
-import lexicalHTML from '@lexical/html'
+import * as lexical from 'lexical'
+import * as lexicalHeadless from '@lexical/headless'
+import * as lexicalHTML from '@lexical/html'
 
 import { defaultTheme, readOnlyTheme } from '../editors/theme.js'
 import { entityConfig } from '../editors/Entity/config.js'

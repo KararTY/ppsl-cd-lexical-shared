@@ -1,4 +1,4 @@
-import lexical from 'lexical'
+import * as lexical from 'lexical'
 const { ElementNode } = lexical
 
 /**

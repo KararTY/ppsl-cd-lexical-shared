@@ -1,6 +1,6 @@
 import * as Y from 'yjs'
-import lexicalHeadless from '@lexical/headless'
-import lexicalYjs from '@lexical/yjs/LexicalYjs.js'
+import * as lexicalHeadless from '@lexical/headless'
+import * as lexicalYjs from '@lexical/yjs'
 
 const { createBinding, syncYjsChangesToLexical } = lexicalYjs
 
