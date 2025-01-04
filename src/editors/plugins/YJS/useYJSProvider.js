@@ -55,7 +55,7 @@ function providerFactory ({
   const idbPersistence = new IndexeddbPersistence(id, doc)
 
   idbPersistence.connect = noop
-  idbPersistence.disconnect = idbPersistence.destroy
+  idbPersistence.disconnect = noop
   idbPersistence.awareness = {
     setLocalState: noop,
     getStates: () => [],
@@ -114,7 +114,7 @@ function providerFactory ({
   globalThis._persistence = persistence
 
   yDoc = doc
-  yDocRef.current = yDoc
+  yDocRef.current = doc
 
   provider = persistence
 

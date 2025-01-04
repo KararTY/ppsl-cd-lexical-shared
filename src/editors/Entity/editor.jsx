@@ -6,27 +6,21 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin'
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 
 import { defaultTheme, editableEditorTheme, readOnlyTheme } from '../theme'
 import { Toolbar } from '../toolbar/index'
 import { Placeholder } from '../components/placeholder'
 import { Editor } from '../components/editor'
 import { EditorFooter } from '../components/footer'
-import useIsClient from '../components/useIsClient'
 
-import { INSERT_ENTITYCONTAINER_COMMAND } from '../plugins/EntityContainer/utils'
 import { EntityContainerPlugin } from '../plugins/EntityContainer/plugin'
 import { EntityMentionPlugin } from '../plugins/EntityMention/plugin'
 import { ImageModalPlugin } from '../plugins/EntityImage/ImageModalPlugin'
-import { useYJSProvider } from '../plugins/YJS'
+import { useYJSProvider } from '../plugins/YJS/useYJSProvider'
 
 import { entityConfig } from './config'
 import { getToolbarTitle } from './utils'
-
-function initialState (editor) {
-  editor.dispatchCommand(INSERT_ENTITYCONTAINER_COMMAND)
-}
 
 /**
  * @param {{readOnly, onSubmit, post, title, update, initialUpdate, user}} props
@@ -49,8 +43,6 @@ export function EntityEditor (props) {
   const yDocRef = useRef(null)
   const providerFactory = useYJSProvider(yDocRef, update, initialUpdate)
 
-  const isClient = useIsClient()
-
   const [isSaving, setIsSaving] = useState(false)
 
   const onSubmitCatch = async (...args) => {
@@ -59,9 +51,7 @@ export function EntityEditor (props) {
     setIsSaving(false)
   }
 
-  const config = entityConfig(defaultTheme, !readOnly, null, function onError (error) {
-    throw error
-  })
+  const config = entityConfig(defaultTheme, !readOnly, null)
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
   config.theme = { ...config.theme, ...editorTheme }
@@ -77,9 +67,11 @@ export function EntityEditor (props) {
       const parent = node.getParent()
 
       if (parent instanceof ParagraphNode) {
-        const children = node.getChildren()
-        parent.append(...children)
-        node.remove()
+        editor.update(() => {
+          const children = node.getChildren()
+          parent.append(...children)
+          node.remove()
+        })
       }
     })
   }, [editorRef])
@@ -99,7 +91,7 @@ export function EntityEditor (props) {
 
             {!readOnly && <ImageModalPlugin />}
 
-            {isClient && <EntityMentionPlugin />}
+            <EntityMentionPlugin />
 
             <RichTextPlugin
               placeholder={!readOnly && <Placeholder />}
@@ -108,21 +100,18 @@ export function EntityEditor (props) {
               }
               ErrorBoundary={LexicalErrorBoundary}
             />
-
-            {isClient && (
-              <CollaborationPlugin
-                id={post.id || 'new'}
-                providerFactory={providerFactory}
-                initialEditorState={initialState}
-                shouldBootstrap={!update}
-                username={user.id}
-              />
-            )}
           </div>
 
           {!readOnly && <EditorFooter isSaving={isSaving} />}
         </article>
       </Editor>
+
+      <CollaborationPlugin
+        id={post.id}
+        providerFactory={providerFactory}
+        shouldBootstrap={false}
+        username={user.id}
+      />
     </LexicalComposer>
   )
 }

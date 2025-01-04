@@ -14,7 +14,7 @@ import { Editor } from '../components/editor'
 import { EditorFooter } from '../components/footer'
 import useIsClient from '../components/useIsClient'
 
-import { useYJSProvider } from '../plugins/YJS'
+import { useYJSProvider } from '../plugins/YJS/useYJSProvider'
 
 import { bioConfig } from './config'
 import { getToolbarTitle } from '../Entity/utils'
@@ -24,7 +24,15 @@ import { Toolbar } from '../toolbar'
  * @param {{readOnly, post, update, user}} props
  */
 export function BioEditor (props) {
-  const { readOnly = false, title, post = {}, onSubmit, update, user } = props
+  const {
+    readOnly = false,
+    title,
+    post = {},
+    onSubmit,
+    update,
+    initialUpdate,
+    user
+  } = props
 
   const isClient = useIsClient()
   const [isSaving, setIsSaving] = useState(false)
@@ -35,9 +43,7 @@ export function BioEditor (props) {
     setIsSaving(false)
   }
 
-  const config = bioConfig(defaultTheme, !readOnly, null, function onError (error) {
-    throw error
-  })
+  const config = bioConfig(defaultTheme, !readOnly, null)
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
   config.theme = { ...config.theme, ...editorTheme }
@@ -74,8 +80,8 @@ export function BioEditor (props) {
               <CollaborationPlugin
                 id={post.id}
                 providerFactory={providerFactory}
-                initialEditorState={initialState}
-                shouldBootstrap={!update}
+                initialEditorState={initialUpdate}
+                shouldBootstrap={false}
                 username={user.id}
               />
             )}
