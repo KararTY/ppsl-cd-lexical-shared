@@ -1,33 +1,6 @@
-import { base64ToUint8Array } from 'uint8array-extras'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { updateToJSON } from './yjs'
 import { toHTML } from './lexicalHTML'
-
-import { defaultTheme, readOnlyTheme } from '../editors/theme'
-import { entityConfig } from '../editors/Entity/config'
-import { bioConfig } from '../editors/Bio/config'
-import { SYSTEM_IDS } from '../editors/constants'
-
-const { ENTITY, BIO, REVIEW } = SYSTEM_IDS
-
-const theme = { ...defaultTheme, ...readOnlyTheme }
-
-function onError (error) {
-  throw error
-}
-
-const configs = {
-  [ENTITY]: {
-    config: entityConfig(theme, false, null, onError)
-  },
-  [BIO]: {
-    config: bioConfig(theme, false, null, onError)
-  },
-  [REVIEW]: {
-    config: bioConfig(theme, false, null, onError)
-  }
-}
 
 export const YjsToHTML = forwardRef(
   ({ update, type, className = '', handleIsEmpty }, ref) => {
@@ -45,10 +18,7 @@ export const YjsToHTML = forwardRef(
           return
         }
 
-        const { config } = configs[type]
-
-        const editorState = updateToJSON(config, base64ToUint8Array(update))
-        const htmlRes = await toHTML(JSON.stringify(editorState), type)
+        const htmlRes = await toHTML({ update: memoizedInitialContent }, type)
 
         if (htmlRes.length > 0) {
           setHTML(htmlRes)

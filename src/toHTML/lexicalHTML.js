@@ -6,6 +6,8 @@ import { defaultTheme, readOnlyTheme } from '../editors/theme.js'
 import { entityConfig } from '../editors/Entity/config.js'
 import { bioConfig } from '../editors/Bio/config.js'
 import { SYSTEM_IDS } from '../editors/constants.js'
+import { getEditor } from '../../../yjs.js'
+import { base64ToUint8Array } from 'uint8array-extras'
 
 const { $getRoot } = lexical
 const { createHeadlessEditor } = lexicalHeadless
@@ -20,18 +22,33 @@ const configs = {
 
 const theme = { ...defaultTheme, ...readOnlyTheme }
 
-export async function toHTML (strState, type) {
+export async function toHTML ({ content, update }, type) {
   return new Promise((resolve, reject) => {
+    if (!content && !update) {
+      reject(new Error('No content and/or update provided.'))
+
+      return
+    }
+
     const conf = configs[type] ?? bioConfig
     const config = conf(theme, false, null, (error) => {
       reject(error)
     })
 
-    const editor = createHeadlessEditor(config)
+    /**
+     * @type {import('lexical').LexicalEditor}
+     */
+    let editor
+    if (update) {
+      const e = getEditor(config, base64ToUint8Array(update))
+      editor = e.editor
+    } else {
+      editor = createHeadlessEditor(config)
 
-    editor.setEditorState(editor.parseEditorState(strState))
+      editor.setEditorState(editor.parseEditorState(content))
+    }
 
-    editor.update(() => {
+    editor.read(() => {
       const textInEditor = $getRoot().getTextContent().trim()
 
       if (textInEditor.length > 0) {
