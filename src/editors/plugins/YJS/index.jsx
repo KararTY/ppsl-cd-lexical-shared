@@ -3,14 +3,13 @@ import { base64ToUint8Array } from 'uint8array-extras'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { useCallback } from 'react'
 
-export function useYJSProvider (yDocRef, update) {
-  return useCallback(
-    (...args) => providerFactory(yDocRef, update, ...args),
-    [yDocRef, update]
-  )
-}
-
 const noop = () => {}
+
+/**
+ * @typedef {IndexeddbPersistence & { awareness: any, connect: typeof noop, disconnect: typeof noop }} IndexeddbPersistenceProvider
+ *
+ * @typedef {{ yDocRef: React.Ref<null | Y.Doc>, update: string, id: string, yjsDocMap: Map<string, Y.Doc>, initialUpdate?: string }} ProviderFactory
+ */
 
 /**
  * @type {undefined | Y.Doc}
@@ -23,13 +22,16 @@ let yDoc
 let provider
 
 /**
- * @param {React.Ref<null | Y.Doc} yDocRef
- * @param {Uint8Array} update
- * @param {string} id
- * @param {Map<string, Y.Doc>} yjsDocMap
+ * @param {ProviderFactory} arg1
  * @returns {import('@lexical/yjs').Provider}
  */
-function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
+function providerFactory ({
+  yDocRef,
+  update,
+  id = 'new',
+  yjsDocMap,
+  initialUpdate
+}) {
   if (provider) {
     yDocRef.current = yDoc
     return provider
@@ -46,12 +48,15 @@ function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
     doc.load()
   }
 
-  const persistence = new IndexeddbPersistence(id, doc)
+  /**
+   * @type {IndexeddbPersistenceProvider}
+   */
+  // @ts-ignore
+  const idbPersistence = new IndexeddbPersistence(id, doc)
 
-  // This is for resetEditorModalContent.
-  globalThis._persistence = persistence
-
-  persistence.awareness = {
+  idbPersistence.connect = noop
+  idbPersistence.disconnect = idbPersistence.destroy
+  idbPersistence.awareness = {
     setLocalState: noop,
     getStates: () => [],
     getLocalState: () => null,
@@ -59,13 +64,19 @@ function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
     off: noop
   }
 
-  persistence.connect = noop
+  const persistence = idbPersistence
 
-  persistence.on('synced', (...args) => {
+  persistence.on('synced', (/** @type {any[]} */ ...args) => {
     persistence.emit('sync', args)
   })
 
   persistence.once('synced', () => {
+    let useInitialUpdate = false
+
+    if (doc.get('root', Y.XmlText).length === 0) {
+      useInitialUpdate = true
+    }
+
     if (update) {
       // https://github.com/yjs/yjs/blob/52b906898fee761a6223eeef6a33adc2a4041b80/README.md#example-syncing-clients-without-loading-the-ydoc
 
@@ -82,7 +93,25 @@ function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
 
       Y.applyUpdate(doc, diff)
     }
+
+    if (!update && useInitialUpdate && initialUpdate) {
+      const currentStateUpdate = Y.encodeStateAsUpdate(doc)
+
+      const stateVector = Y.encodeStateVectorFromUpdate(currentStateUpdate)
+
+      // Incoming update
+      const uint8ArrayContent = base64ToUint8Array(initialUpdate)
+      const convertedUpdate = Y.convertUpdateFormatV2ToV1(uint8ArrayContent)
+
+      // Diff the updates
+      const diff = Y.diffUpdate(convertedUpdate, stateVector)
+
+      Y.applyUpdate(doc, diff)
+    }
   })
+
+  // This is for resetEditorModalContent.
+  globalThis._persistence = persistence
 
   yDoc = doc
   yDocRef.current = yDoc
@@ -90,4 +119,21 @@ function providerFactory (yDocRef, update, id = 'new', yjsDocMap) {
   provider = persistence
 
   return provider
+}
+
+/**
+ * @param {ProviderFactory['yDocRef']} yDocRef
+ * @param {ProviderFactory['update']} update
+ * @param {ProviderFactory['initialUpdate']} initialUpdate
+ */
+export function useYJSProvider (yDocRef, update, initialUpdate) {
+  return useCallback(
+    /**
+     * @param {ProviderFactory['id']} id
+     * @param {ProviderFactory['yjsDocMap']} yjsDocMap
+     */
+    (id, yjsDocMap) =>
+      providerFactory({ yDocRef, update, id, yjsDocMap, initialUpdate }),
+    [yDocRef, update, initialUpdate]
+  )
 }

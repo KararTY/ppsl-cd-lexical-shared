@@ -29,17 +29,25 @@ function initialState (editor) {
 }
 
 /**
- * @param {{readOnly, onSubmit, post, title, update, user}} props
+ * @param {{readOnly, onSubmit, post, title, update, initialUpdate, user}} props
  */
 export function EntityEditor (props) {
-  const { readOnly = false, onSubmit, post = {}, title, update, user } = props
+  const {
+    readOnly = false,
+    onSubmit,
+    post = {},
+    title,
+    update,
+    initialUpdate,
+    user
+  } = props
 
   /**
    * @type {React.Ref<null | import('lexical').LexicalEditor>}
    */
   const editorRef = useRef(null)
   const yDocRef = useRef(null)
-  const providerFactory = useYJSProvider(yDocRef, update)
+  const providerFactory = useYJSProvider(yDocRef, update, initialUpdate)
 
   const isClient = useIsClient()
 
