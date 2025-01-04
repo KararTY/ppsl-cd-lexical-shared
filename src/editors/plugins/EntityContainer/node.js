@@ -1,5 +1,5 @@
 import * as lexical from 'lexical'
-const { ElementNode } = lexical
+const { $applyNodeReplacement, ElementNode } = lexical
 
 /**
  * @typedef {import('lexical').EditorConfig} EditorConfig
@@ -60,7 +60,7 @@ export class EntityContainerNode extends ElementNode {
 }
 
 export function $createEntityContainerNode () {
-  return new EntityContainerNode()
+  return $applyNodeReplacement(new EntityContainerNode())
 }
 
 /**

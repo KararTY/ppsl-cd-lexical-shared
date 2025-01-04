@@ -1,7 +1,7 @@
 import * as lexical from 'lexical'
 import Image from './Image.js'
 
-const { DecoratorNode } = lexical
+const { $applyNodeReplacement, DecoratorNode } = lexical
 
 /**
  * @typedef {import('lexical').LexicalEditor} LexicalEditor
@@ -148,7 +148,7 @@ export class EntityImageNode extends DecoratorNode {
  * @param {EntityImageProps} props
  */
 export function $createEntityImageNode (props) {
-  return new EntityImageNode(props)
+  return $applyNodeReplacement(new EntityImageNode(props))
 }
 
 /**
