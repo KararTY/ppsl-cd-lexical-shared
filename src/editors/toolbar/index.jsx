@@ -13,7 +13,6 @@ import {
   $isRangeSelection,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
-  DEPRECATED_$isGridSelection as deprecated$isGridSelection,
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
@@ -114,10 +113,7 @@ export function Toolbar ({ title = '' }) {
     paragraph: () => {
       editor.update(() => {
         const selection = $getSelection()
-        if (
-          $isRangeSelection(selection) ||
-          deprecated$isGridSelection(selection)
-        ) {
+        if ($isRangeSelection(selection)) {
           $setBlocksType(selection, () => $createParagraphNode())
         }
       })
@@ -241,7 +237,7 @@ export function Toolbar ({ title = '' }) {
                 Icon={ItalicIcon}
               />
 
-              <div className="flex gap-1 ml-auto">
+              <div className="ml-auto flex gap-1">
                 <Divider />
                 <ButtonIcon
                   onClick={() => editor.dispatchCommand(RESET_EDITOR)}
