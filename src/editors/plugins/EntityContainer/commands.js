@@ -1,10 +1,7 @@
 import * as lexical from 'lexical'
 import * as lexicalUtils from '@lexical/utils'
 
-import {
-  $createEntityImageNode,
-  EntityImageNode
-} from '../EntityImage/node.js'
+import { $createEntityImageNode, EntityImageNode } from '../EntityImage/node.js'
 import {
   $createEntityShortDescriptionNode,
   EntityShortDescriptionNode
@@ -42,25 +39,26 @@ export const registerInsertEntityContainerCommand = (editor) =>
   editor.registerCommand(
     INSERT_ENTITYCONTAINER_COMMAND,
     () => {
-      editor.update(
-        () => {
-          const entityImage = $createEntityImageNode({ src: '' })
-          const entityShortDescription =
-            $createEntityShortDescriptionNode().append($createParagraphNode())
-
-          const entityLongDescription =
-            $createEntityLongDescriptionNode().append($createParagraphNode())
-
-          const entityContainer = $createEntityContainerNode().append(
-            entityImage,
-            entityShortDescription,
-            entityLongDescription
+      editor.update(() => {
+        const entityImage = $createEntityImageNode({ src: '' })
+        const entityShortDescription =
+          $createEntityShortDescriptionNode().append(
+            $createParagraphNode($createTextNode())
           )
-          $getRoot().clear().append(entityContainer)
 
-          entityShortDescription.selectEnd()
-        }
-      )
+        const entityLongDescription = $createEntityLongDescriptionNode().append(
+          $createParagraphNode($createTextNode())
+        )
+
+        const entityContainer = $createEntityContainerNode().append(
+          entityImage,
+          entityShortDescription,
+          entityLongDescription
+        )
+        $getRoot().clear().append(entityContainer)
+
+        entityShortDescription.selectEnd()
+      })
     },
     COMMAND_PRIORITY_LOW
   )
