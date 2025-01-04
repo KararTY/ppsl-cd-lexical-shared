@@ -1,3 +1,7 @@
+import { SYSTEM_IDS } from './constants'
+
+const { ENTITY, BIO, REVIEW, SYSTEM } = SYSTEM_IDS
+
 /**
  * @param {[{ isSystem: boolean, toPost?: { id: string }, toPostId: string }]} relations
  * @param {string} type
@@ -13,10 +17,11 @@ export function isOfPostType (relations, type) {
 
 export const getPostType = (post) => {
   return (
-    isOfPostType(post.outRelations, 'system') ||
-    isOfPostType(post.outRelations, 'entity') ||
-    isOfPostType(post.outRelations, 'bio') ||
-    isOfPostType(post.outRelations, 'review') ||
+    (post.id === 'system' ? SYSTEM : false) ||
+    isOfPostType(post.outRelations, SYSTEM) ||
+    isOfPostType(post.outRelations, ENTITY) ||
+    isOfPostType(post.outRelations, BIO) ||
+    isOfPostType(post.outRelations, REVIEW) ||
     null
   )
 }
