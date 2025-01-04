@@ -19,13 +19,13 @@ function onError (error) {
 
 const configs = {
   [ENTITY]: {
-    config: entityConfig(theme, false, onError)
+    config: entityConfig(theme, false, null, onError)
   },
   [BIO]: {
-    config: bioConfig(theme, false, onError)
+    config: bioConfig(theme, false, null, onError)
   },
   [REVIEW]: {
-    config: bioConfig(theme, false, onError)
+    config: bioConfig(theme, false, null, onError)
   }
 }
 

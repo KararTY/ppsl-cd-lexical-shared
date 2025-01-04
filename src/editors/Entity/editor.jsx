@@ -59,10 +59,9 @@ export function EntityEditor (props) {
     setIsSaving(false)
   }
 
-  const config = entityConfig(defaultTheme, !readOnly, function onError (error) {
+  const config = entityConfig(defaultTheme, !readOnly, null, function onError (error) {
     throw error
   })
-  config.editorState = null // Set by CollaborationPlugin
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
   config.theme = { ...config.theme, ...editorTheme }

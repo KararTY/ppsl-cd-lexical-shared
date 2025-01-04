@@ -35,10 +35,9 @@ export function BioEditor (props) {
     setIsSaving(false)
   }
 
-  const config = bioConfig(defaultTheme, !readOnly, function onError (error) {
+  const config = bioConfig(defaultTheme, !readOnly, null, function onError (error) {
     throw error
   })
-  config.editorState = null
 
   const editorTheme = !readOnly ? editableEditorTheme : readOnlyTheme
   config.theme = { ...config.theme, ...editorTheme }

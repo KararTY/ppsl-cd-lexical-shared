@@ -59,11 +59,8 @@ export const registerInsertEntityContainerCommand = (editor) =>
           $getRoot().clear().append(entityContainer)
 
           entityShortDescription.selectEnd()
-        },
-        { tag: 'historic' }
+        }
       )
-
-      return true
     },
     COMMAND_PRIORITY_LOW
   )

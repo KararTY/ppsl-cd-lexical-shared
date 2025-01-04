@@ -23,7 +23,7 @@ const theme = { ...defaultTheme, ...readOnlyTheme }
 export async function toHTML (strState, type) {
   return new Promise((resolve, reject) => {
     const conf = configs[type] ?? bioConfig
-    const config = conf(theme, false, (error) => {
+    const config = conf(theme, false, null, (error) => {
       reject(error)
     })
 
